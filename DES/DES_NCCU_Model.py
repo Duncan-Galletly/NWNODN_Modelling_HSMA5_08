@@ -38,9 +38,7 @@ class g:
     number_of_runs = 20
     warm_up_duration =50
     
-# Class representing our patients coming in for the weight loss clinic.
-# This time we've added another attribute, that will store the calculated
-# queuing time for the nurse for each patient (each instance of this class)
+# Class representing our births requiring additional care.
 class Birth_Patient:
     def __init__(self, p_id, prob_NICU, prob_HDCU, prob_SCBU):
         self.id = p_id
@@ -66,7 +64,7 @@ class Birth_Patient:
         if random.uniform(0, 1) < self.prob_SCBU:
             self.SCBU_Pat = True
         
-# Class representing our model of the GP Surgery.
+# Class representing our model of Neonatal Unit.
 class NCCU_Model:
     
     """1"""
@@ -111,16 +109,14 @@ class NCCU_Model:
             # with this patient
             self.env.process(self.manage_birth_resource(birth))
             
-            # Randomly sample the time to the next patient arriving for the
-            # weight loss clinic.  The mean is stored in the g class.
+            # Randomly sample the time to the next birth
             sampled_interarrival = random.expovariate(1.0 / g.day_births_inter)
             
             # Freeze this function until that time has elapsed
             yield self.env.timeout(sampled_interarrival)
             
     # A method that models the processes for births and assigning resources.
-    # The method needs to be passed a patient who will go through these
-    # processes
+    # The method needs to be passed a patient who may require resources
     def manage_birth_resource(self, birth):
         # Record the time the patient started queuing for a cot
         start_cot_wait = self.env.now
@@ -131,7 +127,7 @@ class NCCU_Model:
                 # Freeze the function until the request for a cot can be met
                 yield req
                 
-                # Record the time the patient finished queuing for a nurse
+                # Record the time the patient finished queuing
                 end_NICU_wait = self.env.now
                 
                 # Calculate the time this patient spent queuing for a cot and
@@ -139,7 +135,6 @@ class NCCU_Model:
                 birth.q_time_NICU = end_NICU_wait - start_cot_wait
                 
                 # Randomly sample the time the patient will spend in NICU
-                # The mean is stored in the g class.
                 sampled_NICU_duration = random.expovariate(1.0 / g.avg_NICU_stay)
                 
                 # Freeze this function until that time has elapsed
@@ -153,15 +148,14 @@ class NCCU_Model:
             available_bed_type = yield from self.request_any_available_cot(self.HDCU, self.NICU)
             with available_bed_type.request() as req:
                 
-                # Record the time the patient finished queuing for a nurse
+                # Record the time the patient finished queuing
                 end_HDCU_wait = self.env.now
                 
                 # Calculate the time this patient spent queuing for a cot and
                 # store in the patient's attribute
                 birth.q_time_HDCU = end_HDCU_wait - start_cot_wait
                 
-                # Randomly sample the time the patient will spend in NICU
-                # The mean is stored in the g class.
+                # Randomly sample the time the patient will spend in HDCU
                 sampled_HDCU_duration = random.expovariate(1.0 / g.avg_HDCU_stay)
                 
                 # Freeze this function until that time has elapsed
@@ -175,7 +169,7 @@ class NCCU_Model:
             available_bed_type = yield from self.request_any_available_cot( self.SCBU, self.HDCU, self.NICU)
             with available_bed_type.request() as req:
                 
-                # Record the time the patient finished queuing for a nurse
+                # Record the time the patient finished queuing
                 end_SCBU_wait = self.env.now
                 
                 # Calculate the time this patient spent queuing for a cot and
@@ -293,10 +287,7 @@ class Trial_Results_Calculator:
                f"{trial_mean_q_time_HDCU:.2f}")
         print ("Mean Wait Days for SCBU over Trial :",
                f"{trial_mean_q_time_SCBU:.2f}")
-
-
-# Everything above is definition of classes and functions, but here's where
-# the code will start actively doing things.        
+     
 
 # Create a file to store trial results, and write the column headers
 """7"""
