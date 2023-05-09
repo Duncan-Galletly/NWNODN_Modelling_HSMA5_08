@@ -31,9 +31,9 @@ class g:
     avg_NICU_stay = 20
     avg_HDCU_stay = 20
     avg_SCBU_stay = 20
-    number_of_NICU_cots = 10
+    number_of_NICU_cots = 5
     number_of_HDCU_cots = 10
-    number_of_SCBU_cots = 10
+    number_of_SCBU_cots = 12
     sim_duration = 200
     number_of_runs = 20
     warm_up_duration =50
@@ -173,9 +173,7 @@ class NCCU_Model:
         
         if birth.SCBU_Pat == True:
             # Request a SCBU cot
-            with self.SCBU.request() as req:
-                # Freeze the function until the request for a cot can be met
-                yield req
+            with (yield self.request_any_available_cot(self.NICU, self.HDCU, self.SCBU)) as req:
                 
                 # Record the time the patient finished queuing for a nurse
                 end_SCBU_wait = self.env.now
@@ -194,6 +192,21 @@ class NCCU_Model:
         if self.env.now > g.warm_up_duration:
             self.store_results(birth)
             
+            
+    def request_any_available_cot(self, bed_type_NICU, bed_type_HDCU, bed_Type_SCBU):
+        # Create request events for each bed type
+        requests = [bed_type.request() for bed_type in [bed_type_NICU, bed_type_HDCU, bed_Type_SCBU]]
+
+        # Freeze the function until the request for a cot can be met
+        available_bed = yield simpy.AnyOf(self.env, requests)
+
+        for bed_type, request in zip([bed_type_NICU, bed_type_HDCU, bed_Type_SCBU], requests):
+            if request in available_bed:
+                with bed_type.request() as req:
+                    yield req
+                    bed_type.release(req)
+                    return req
+                    
     
     def store_results(self, patient):        
         if patient.NICU_Pat == True or patient.HDCU_Pat == True or patient.SCBU_Pat == True:
