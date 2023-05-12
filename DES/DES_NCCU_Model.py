@@ -15,6 +15,15 @@ if not os.path.isfile(file_name):
     with open(file_name, "w", newline='') as f:
         writer = csv.writer(f, delimiter=",")
         writer.writerow(headers)  # Write headers if the file does not exist
+        
+       
+r_file_name = "./resource_monitor_data.csv"
+r_headers = ["Run_Number", "Day", "Resource", "Daily_Use", "Total_Capacity", "Available_Capacity"] 
+# Check if the file exists
+if not os.path.isfile(r_file_name):
+    with open(r_file_name, "w", newline='') as f:
+        writer = csv.writer(f, delimiter=",")
+        writer.writerow(r_headers)  # Write headers if the file does not exist
 
 
 # Class to store global parameter values.  We don't create an instance of this
@@ -28,12 +37,12 @@ class g:
     chance_need_HDCU = 0.08
     chance_need_SCBU = 0.1
     chance_discharge = 0.8
-    avg_NICU_stay = 20
-    avg_HDCU_stay = 20
-    avg_SCBU_stay = 20
-    number_of_NICU_cots = 5
-    number_of_HDCU_cots = 10
-    number_of_SCBU_cots = 15
+    avg_NICU_stay = 2
+    avg_HDCU_stay = 2
+    avg_SCBU_stay = 2
+    number_of_NICU_cots = 100
+    number_of_HDCU_cots = 100
+    number_of_SCBU_cots = 100
     sim_duration = 200
     number_of_runs = 20
     warm_up_duration =50
@@ -88,6 +97,11 @@ class NCCU_Model:
         self.results_df["Q_Time_HDCU"] = []
         self.results_df["Q_Time_SCBU"] = []
         self.results_df.set_index("P_ID", inplace=True)
+        
+        self.resource_monitor_df = pd.DataFrame(columns=["Day", "Resource", "Daily_Use"])
+        self.NICU_usage = {}
+        self.HDCU_usage = {}
+        self.SCBU_usage = {}
         
     # A method that generates births 
     def generate_birth_arrivals(self):
@@ -199,8 +213,39 @@ class NCCU_Model:
                 request = requests[bed_type]
                 if request in available_bed:
                     return bed_type
-                    
-    
+            
+    def record_daily_usage(self, day):
+        self.resource_monitor_df = self.resource_monitor_df.append({"Run_Number": self.run_number,
+                                                                    "Day": day, 
+                                                                    "Resource": "NICU", 
+                                                                    "Daily_Use": self.NICU.count,
+                                                                    "Total_Capacity": self.NICU.capacity,
+                                                                    "Available_Capacity": self.NICU.capacity - self.NICU.count},
+                                                                ignore_index=True)
+        self.resource_monitor_df = self.resource_monitor_df.append({"Run_Number": self.run_number,
+                                                                    "Day": day, 
+                                                                    "Resource": "HDCU", 
+                                                                    "Daily_Use": self.HDCU.count,
+                                                                    "Total_Capacity": self.HDCU.capacity,
+                                                                    "Available_Capacity": self.HDCU.capacity - self.HDCU.count},
+                                                                ignore_index=True)
+        self.resource_monitor_df = self.resource_monitor_df.append({"Run_Number": self.run_number,
+                                                                    "Day": day, 
+                                                                    "Resource": "SCBU", 
+                                                                    "Daily_Use": self.SCBU.count,
+                                                                    "Total_Capacity": self.SCBU.capacity,
+                                                                    "Available_Capacity": self.SCBU.capacity - self.SCBU.count},
+                                                                ignore_index=True)
+
+
+        
+    def monitor_resource(self, resource, dic):
+        while True:
+            dic[self.env.now] = resource.count
+            self.record_daily_usage(int(self.env.now))
+            yield self.env.timeout(1)  # Check resource usage every 1 time unit  
+            
+     
     def store_results(self, patient):        
         if patient.NICU_Pat == True or patient.HDCU_Pat == True or patient.SCBU_Pat == True:
             patient.q_time_ed_assess = float("nan")
@@ -213,7 +258,8 @@ class NCCU_Model:
                                         "Q_Time_SCBU":[patient.q_time_SCBU]})
         
         df_to_add.set_index("P_ID", inplace=True)
-        self.results_df = self.results_df.append(df_to_add)            
+        self.results_df = self.results_df.append(df_to_add)  
+                  
     # A method that calculates the average queing time for the cots.  We can
     # call this at the end of each run
     """3"""
@@ -228,7 +274,6 @@ class NCCU_Model:
     """4"""
 
     def write_run_results(self):
-
         with open(file_name, "a", newline='') as f:
             writer = csv.writer(f, delimiter=",")
             results_to_write = [self.run_number,
@@ -238,6 +283,12 @@ class NCCU_Model:
                                 self.mean_q_time_SCBU
                                 ]
             writer.writerow(results_to_write)
+         
+        with open("./resource_monitor_data.csv", "a", newline='') as f:
+            writer = csv.writer(f, delimiter=",")    
+            for index, row in self.resource_monitor_df.iterrows():
+                writer.writerow(row)
+
 
     # The run method starts up the entity generators, and tells SimPy to start
     # running the environment for the duration specified in the g class. After
@@ -247,10 +298,15 @@ class NCCU_Model:
         # Start entity generators
         self.env.process(self.generate_birth_arrivals())
         
+        self.env.process(self.monitor_resource(self.NICU, self.NICU_usage))
+        self.env.process(self.monitor_resource(self.HDCU, self.HDCU_usage))
+        self.env.process(self.monitor_resource(self.SCBU, self.SCBU_usage))
+        
         # Run simulation
         self.env.run(until=g.sim_duration)
         
         """5"""
+        
         # Calculate run results
         self.calculate_mean_q_time_bed()
         
@@ -303,8 +359,8 @@ with open("./trial_ed_results.csv", "w") as f:
 # GP_Surgery_Model class, and call its run method
 for run in range(g.number_of_runs):
     print (f"Run {run+1} of {g.number_of_runs}")
-    my_gp_model = NCCU_Model(run)
-    my_gp_model.run()
+    my_NCCU_model = NCCU_Model(run)
+    my_NCCU_model.run()
     print ()
 
 # Once the trial is complete, we'll create an instance of the
