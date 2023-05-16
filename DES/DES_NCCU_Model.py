@@ -65,8 +65,8 @@ class g:
                             #this is randomly sampled on an exponential curve
     chance_need_NICU = 0.01 # percentage chance NICU needed
     chance_need_HDCU = 0.035 # percentage chance HDCU needed
-    chance_need_SCBU = 0.055 # percentage chance SCBU needed
-    chance_discharge = 0.9 # percentage chance now additional care needed
+    chance_need_SCBU = 0.155 # percentage chance SCBU needed
+    chance_discharge = 0.8 # percentage chance now additional care needed
     avg_NICU_stay = 10 # average stay in care setting in whole days
     avg_HDCU_stay = 5 # average stay in care setting in whole days
     avg_SCBU_stay = 5 # average stay in care setting in whole days
@@ -143,7 +143,6 @@ class Birth_Patient:
     #         writer = csv.writer(f, delimiter=",")    
     #         for index, row in self.pat_monitor_df.iterrows():
     #             writer.writerow(row)
-    
         
 # Class representing our model of Neonatal Unit.
 class NCCU_Model:
