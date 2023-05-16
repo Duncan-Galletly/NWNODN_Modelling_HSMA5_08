@@ -67,15 +67,15 @@ class g:
     chance_need_HDCU = 0.035 # percentage chance HDCU needed
     chance_need_SCBU = 0.055 # percentage chance SCBU needed
     chance_discharge = 0.9 # percentage chance now additional care needed
-    avg_NICU_stay = 4 # average stay in care setting in whole days
-    avg_HDCU_stay = 3 # average stay in care setting in whole days
-    avg_SCBU_stay = 2 # average stay in care setting in whole days
-    number_of_NICU_cots = 12 # Unit capacity of cot type
-    number_of_HDCU_cots = 12 # Unit capacity of cot type
-    number_of_SCBU_cots = 20 # Unit capacity of cot type
-    sim_duration = 200 # duration of simulation 
-    number_of_runs = 20 # number of runs 
-    warm_up_duration =50 # number of cycles before starting data collection
+    avg_NICU_stay = 10 # average stay in care setting in whole days
+    avg_HDCU_stay = 5 # average stay in care setting in whole days
+    avg_SCBU_stay = 5 # average stay in care setting in whole days
+    number_of_NICU_cots = 3 # Unit capacity of cot type
+    number_of_HDCU_cots = 3 # Unit capacity of cot type
+    number_of_SCBU_cots = 12 # Unit capacity of cot type
+    sim_duration = 730 # duration of simulation 
+    number_of_runs = 30 # number of runs 
+    warm_up_duration =365 # number of cycles before starting data collection
     
 # Class representing our births requiring additional care.
 class Birth_Patient:
@@ -222,6 +222,7 @@ class NCCU_Model:
         # Record the time the patient started queuing for a cot
         start_cot_wait = self.env.now
         
+        # Release immediately any agents that dont require any resource
         if not birth.NICU_Pat == True or birth.HDCU_Pat == True or birth.SCBU_Pat == True: 
             return
         
