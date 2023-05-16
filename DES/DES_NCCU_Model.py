@@ -67,6 +67,19 @@ class g:
     chance_need_HDCU = 0.035 # percentage chance HDCU needed
     chance_need_SCBU = 0.155 # percentage chance SCBU needed
     chance_discharge = 0.8 # percentage chance now additional care needed
+    
+    chance_need_HDCU_after_NICU = 0.2 # percentage chance HDCU needed after discharge from NICU
+    chance_need_SCBU_after_NICU = 0.4 # percentage chance SCBU needed after discharge from NICU
+    # percentage chance to discharge is remainder
+    
+    chance_need_NICU_after_HDCU = 0.05 # percentage chance NICU needed after discharge from HDCU
+    chance_need_SCBU_after_HDCU = 0.2 # percentage chance SCBU needed after discharge from HDCU
+    # percentage chance to discharge is remainder
+    
+    chance_need_NICU_after_SCBU = 0.05 # percentage chance NICU needed after discharge from SCBU
+    chance_need_HDCU_after_SCBU = 0.2 # percentage chance SCBU needed after discharge from SCBU
+    # percentage chance to discharge is remainder
+    
     avg_NICU_stay = 10 # average stay in care setting in whole days
     avg_HDCU_stay = 5 # average stay in care setting in whole days
     avg_SCBU_stay = 5 # average stay in care setting in whole days
@@ -94,55 +107,44 @@ class Birth_Patient:
         self.hdcu_chance = 0
         self.scbu_chance = 0
         self.pat_monitor_df = pd.DataFrame()
-        
-    def determine_NICU_destiny(self):
-        nc = random.uniform(0, 1)
-        if nc < self.prob_NICU:
-            self.NICU_Pat = True
-            self.nicu_chance = nc
+
             
-    def determine_HDCU_destiny(self):
-        hc = random.uniform(0, 1)
-        if hc < self.prob_HDCU:
-            self.HDCU_Pat = True
-            self.hdcu_chance = hc
-            
-    def determine_SCBU_destiny(self):
+    def determine_destiny(self, prob_var, var_pat, var_chance):
         sc = random.uniform(0, 1)
-        if sc < self.prob_SCBU:
-            self.SCBU_Pat = True
-            self.scbu_chance = sc
+        if sc < prob_var:
+            setattr(self, var_pat, True)
+            setattr(self, var_chance, sc)
     
             
-    # def pat_monitor(self,run_number, day_number):
-    #     id = self.id 
-    #     nicu_pat = self.NICU_Pat
-    #     nicu_prob = self.nicu_chance
-    #     hdcu_pat = self.HDCU_Pat
-    #     hdcu_prob = self.hdcu_chance
-    #     scbu_pat = self.SCBU_Pat
-    #     scbu_prob = self.scbu_chance
-    #     rn = run_number
-    #     dn = day_number
+    def pat_monitor(self,run_number, day_number):
+        id = self.id 
+        nicu_pat = self.NICU_Pat
+        nicu_prob = self.nicu_chance
+        hdcu_pat = self.HDCU_Pat
+        hdcu_prob = self.hdcu_chance
+        scbu_pat = self.SCBU_Pat
+        scbu_prob = self.scbu_chance
+        rn = run_number
+        dn = day_number
     
-    #     # append data to the dataframe
+        # append data to the dataframe
         
-    #     self.pat_monitor_df = self.pat_monitor_df.append({"Run_Number": rn,
-    #                                                                 "Day_Number": dn,
-    #                                                                 "Pat_ID": id,
-    #                                                                 "nicu_pat": nicu_pat,
-    #                                                                 "nicu_prob": nicu_prob,
-    #                                                                 "hdcu_pat": hdcu_pat,
-    #                                                                 "hdcu_prob": hdcu_prob,
-    #                                                                 "scbu_pat": scbu_pat,
-    #                                                                 "scbu_prob": scbu_prob},
-    #                                                             ignore_index=True)
+        self.pat_monitor_df = self.pat_monitor_df.append({"Run_Number": rn,
+                                                                    "Day_Number": dn,
+                                                                    "Pat_ID": id,
+                                                                    "nicu_pat": nicu_pat,
+                                                                    "nicu_prob": nicu_prob,
+                                                                    "hdcu_pat": hdcu_pat,
+                                                                    "hdcu_prob": hdcu_prob,
+                                                                    "scbu_pat": scbu_pat,
+                                                                    "scbu_prob": scbu_prob},
+                                                                ignore_index=True)
         
-    # def write_pat_details(self):
-    #     with open("./patient_monitor_data.csv", "a", newline='') as f:
-    #         writer = csv.writer(f, delimiter=",")    
-    #         for index, row in self.pat_monitor_df.iterrows():
-    #             writer.writerow(row)
+    def write_pat_details(self):
+        with open("./patient_monitor_data.csv", "a", newline='') as f:
+            writer = csv.writer(f, delimiter=",")    
+            for index, row in self.pat_monitor_df.iterrows():
+                writer.writerow(row)
         
 # Class representing our model of Neonatal Unit.
 class NCCU_Model:
@@ -201,10 +203,12 @@ class NCCU_Model:
                 # and give the patient an ID determined by the patient counter
                 birth = Birth_Patient(self.patient_counter, g.chance_need_NICU, g.chance_need_HDCU, g.chance_need_SCBU)
                 
-                birth.determine_NICU_destiny()
-                birth.determine_HDCU_destiny()
-                birth.determine_SCBU_destiny()
+                birth.determine_destiny(g.chance_need_NICU, 'NICU_Pat', 'nicu_chance')
+                birth.determine_destiny(g.chance_need_HDCU, 'HDCU_Pat', 'hdcu_chance')
+                birth.determine_destiny(g.chance_need_SCBU, 'SCBU_Pat', 'scbu_chance')
                 
+                #THIS MONITORING SIGNIFICANTLY DEGRADES PERFORMANCE ONLY UN_COMMENT 
+                #TEMPORARILY TO CHECK VARIABLE ASSIGNMENTS
                 # birth.pat_monitor(self.run_number, self.env.now)
                 # birth.write_pat_details()
                 
@@ -222,7 +226,7 @@ class NCCU_Model:
         start_cot_wait = self.env.now
         
         # Release immediately any agents that dont require any resource
-        if not birth.NICU_Pat == True or birth.HDCU_Pat == True or birth.SCBU_Pat == True: 
+        if not birth.NICU_Pat == True and not birth.HDCU_Pat == True and not birth.SCBU_Pat == True: 
             return
         
         if birth.NICU_Pat == True:
@@ -245,6 +249,15 @@ class NCCU_Model:
                 # Freeze this function until that time has elapsed
                 yield self.env.timeout(sampled_NICU_duration)
                 
+                # reset NICU flag
+                birth.NICU_Pat = False
+                
+                birth.determine_destiny(g.chance_need_HDCU_after_NICU, 'HDCU_Pat', 'hdcu_chance')
+                if birth.HDCU_Pat == False:
+                    birth.determine_destiny(g.chance_need_SCBU_after_NICU, 'SCBU_Pat', 'scbu_chance')
+                    if birth.SCBU_Pat == False:
+                        return
+                
         # Reinitialist the cot wait on exiting the previous Cot
         start_cot_wait = self.env.now
                 
@@ -266,6 +279,15 @@ class NCCU_Model:
                 
                 # Freeze this function until that time has elapsed
                 yield self.env.timeout(sampled_HDCU_duration)
+                
+                # reset HDCU_pat flag
+                birth.HDCU_Pat = False
+                
+                birth.determine_destiny(g.chance_need_NICU_after_HDCU, 'NICU_Pat', 'nicu_chance')
+                if birth.NICU_Pat == False:
+                    birth.determine_destiny(g.chance_need_SCBU_after_HDCU, 'SCBU_Pat', 'scbu_chance')
+                    if birth.SCBU_Pat == False:
+                        return
     
         # Reinitialist the cot wait on exiting the previous Cot
         start_cot_wait = self.env.now
@@ -289,6 +311,14 @@ class NCCU_Model:
                 
                 # Freeze this function until that time has elapsed
                 yield self.env.timeout(sampled_SCBU_duration)
+                
+                birth.SCBU_Pat = False
+                
+                birth.determine_destiny(g.chance_need_NICU_after_SCBU, 'NICU_Pat', 'nicu_chance')
+                if birth.NICU_Pat == False:
+                    birth.determine_destiny(g.chance_need_HDCU_after_SCBU, 'HDCU_Pat', 'hdcu_chance')
+                    if birth.HDCU_Pat == False:
+                        return
         
         # if self.env.now > g.warm_up_duration:
         #     self.store_results(birth)
@@ -356,13 +386,6 @@ class NCCU_Model:
         
         # Run simulation
         self.env.run(until=g.sim_duration)
-        
-        #     # Create a progress bar for simulation steps
-        # pbar = tqdm(range(g.sim_duration), desc="Running simulation steps")
-
-        # # Run simulation with progress bar
-        # for _ in pbar:
-        #     self.env.timeout(1)
         
         # Write run results to file
         self.write_run_results()
