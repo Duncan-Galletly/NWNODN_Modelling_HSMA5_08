@@ -290,22 +290,21 @@ class NCCU_Model:
         # Run simulation
         self.env.run(until=g.sim_duration)
         
-            # Create a progress bar for simulation steps
-        pbar = tqdm(range(g.sim_duration), desc="Running simulation steps")
+        #     # Create a progress bar for simulation steps
+        # pbar = tqdm(range(g.sim_duration), desc="Running simulation steps")
 
-        # Run simulation with progress bar
-        for _ in pbar:
-            self.env.timeout(1)
+        # # Run simulation with progress bar
+        # for _ in pbar:
+        #     self.env.timeout(1)
         
         # Write run results to file
         self.write_run_results()
 
 # For the number of runs specified in the g class, create an instance of the
 # NCCU_Model class, and call its run method
-#for run in tqdm(range(g.number_of_runs), desc="Running simulations"):
-for run in range(g.number_of_runs):
-    print (f"Run {run+1} of {g.number_of_runs}")
+for run in tqdm(range(g.number_of_runs), desc="Running simulations"):
+#for run in range(g.number_of_runs):
+    #print (f"Run {run+1} of {g.number_of_runs}")
     my_NCCU_model = NCCU_Model(run)
     my_NCCU_model.run()
-    print ()
 
