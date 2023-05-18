@@ -20,7 +20,6 @@ with open(r_file_name, "w", newline='') as f:
     writer = csv.writer(f, delimiter=",")
     writer.writerow(r_headers)  # Write headers to the new file
     
-    
 # p_file_name = "./patient_monitor_data.csv"
 # p_headers = ["Run_Number","Day_Number","Pat_ID","nicu_pat","nicu_prob","hdcu_pat","hdcu_prob","scbu_pat","scbu_prob"] 
 # # Check if the file exists
@@ -61,7 +60,7 @@ def patch_resource(resource, pre=None, post=None):
 class g:
     # As initial model was set up for time in minutes and we are modelling days
     # day_births_inter is representative of the number of births per day
-    day_births_inter = 8  # number of births per day - 3000 per year is around 8.2 per day, 
+    day_births_inter = 8.2  # number of births per day - 3000 per year is around 8.2 per day, 
                             #this is randomly sampled on an exponential curve
     chance_need_NICU = 0.01 # percentage chance NICU needed
     chance_need_HDCU = 0.035 # percentage chance HDCU needed
@@ -69,7 +68,7 @@ class g:
     chance_discharge = 0.8 # percentage chance now additional care needed
     
     chance_need_HDCU_after_NICU = 0.2 # percentage chance HDCU needed after discharge from NICU
-    chance_need_SCBU_after_NICU = 0.4 # percentage chance SCBU needed after discharge from NICU
+    chance_need_SCBU_after_NICU = 0.2 # percentage chance SCBU needed after discharge from NICU
     # percentage chance to discharge is remainder
     
     chance_need_NICU_after_HDCU = 0.05 # percentage chance NICU needed after discharge from HDCU
@@ -80,7 +79,7 @@ class g:
     chance_need_HDCU_after_SCBU = 0.2 # percentage chance SCBU needed after discharge from SCBU
     # percentage chance to discharge is remainder
     
-    avg_NICU_stay = 10 # average stay in care setting in whole days
+    avg_NICU_stay = 5 # average stay in care setting in whole days
     avg_HDCU_stay = 5 # average stay in care setting in whole days
     avg_SCBU_stay = 5 # average stay in care setting in whole days
     number_of_NICU_cots = 3 # Unit capacity of cot type
@@ -97,9 +96,9 @@ class Birth_Patient:
         self.q_time_NICU = 0
         self.q_time_HDCU = 0
         self.q_time_SCBU = 0
-        self.NICU_Pat = 0
-        self.HDCU_Pat = 0
-        self.SCBU_Pat = 0
+        self.NICU_Pat = False
+        self.HDCU_Pat = False
+        self.SCBU_Pat = False
         self.prob_NICU = prob_NICU
         self.prob_HDCU = prob_HDCU
         self.prob_SCBU = prob_SCBU
@@ -219,6 +218,33 @@ class NCCU_Model:
                 # Freeze this function until that time has elapsed
             yield self.env.timeout(1)
             
+            
+    def process_cot_request(self, cot_request, birth, start_cot_wait, avg_stay, next_chances, cot_pat):
+        with cot_request:
+            # Record the time the patient finished queuing
+            end_wait = self.env.now
+
+            # Calculate the time this patient spent queuing for a cot and
+            # store in the patient's attribute
+            birth.q_time_cot = end_wait - start_cot_wait
+
+            # Randomly sample the time the patient will spend in cot
+            sampled_cot_duration = round(random.expovariate(1.0 / avg_stay), 0)
+            sampled_cot_duration = int(sampled_cot_duration)
+
+            # Freeze this function until that time has elapsed
+            yield self.env.timeout(sampled_cot_duration)
+
+            # reset cot flagv
+            setattr(birth, cot_pat, False)
+
+            #calculate the new chances to need the other types of resource having exited one
+            for chance, pat, chance_name in next_chances:
+                birth.determine_destiny(chance, pat, chance_name)
+                if not getattr(birth, pat):
+                    break
+
+            
     # A method that models the processes for births and assigning resources.
     # The method needs to be passed a patient who may require resources
     def manage_birth_resource(self, birth):
@@ -226,116 +252,113 @@ class NCCU_Model:
         start_cot_wait = self.env.now
         
         # Release immediately any agents that dont require any resource
-        if not birth.NICU_Pat == True and not birth.HDCU_Pat == True and not birth.SCBU_Pat == True: 
+        if not (birth.NICU_Pat or birth.HDCU_Pat or birth.SCBU_Pat): 
             return
         
-        if birth.NICU_Pat == True:
-            # Request a NICU cot only
-            with self.NICU.request() as req:
-                # Freeze the function until the request for a cot can be met
+        # Open a while so that any required cot can be processed while needed
+        while birth.NICU_Pat or birth.HDCU_Pat or birth.SCBU_Pat:
+            
+            """Process NICU Requirement"""
+            if birth.NICU_Pat == True:
+                # Request a NICU cot only
+                req = self.NICU.request()
                 yield req
-                
-                # Record the time the patient finished queuing
-                end_NICU_wait = self.env.now
-                
-                # Calculate the time this patient spent queuing for a cot and
-                # store in the patient's attribute
-                birth.q_time_NICU = end_NICU_wait - start_cot_wait
-                
-                # Randomly sample the time the patient will spend in NICU
-                sampled_NICU_duration = round(random.expovariate(1.0 / g.avg_NICU_stay),0)
-                sampled_NICU_duration = int(sampled_NICU_duration)
-                
-                # Freeze this function until that time has elapsed
-                yield self.env.timeout(sampled_NICU_duration)
-                
-                # reset NICU flag
-                birth.NICU_Pat = False
-                
-                birth.determine_destiny(g.chance_need_HDCU_after_NICU, 'HDCU_Pat', 'hdcu_chance')
-                if birth.HDCU_Pat == False:
-                    birth.determine_destiny(g.chance_need_SCBU_after_NICU, 'SCBU_Pat', 'scbu_chance')
-                    if birth.SCBU_Pat == False:
-                        return
-                
-        # Reinitialist the cot wait on exiting the previous Cot
-        start_cot_wait = self.env.now
-                
-        if birth.HDCU_Pat == True:
-            # Request a HDCU cot, or a NICU cot
-            available_bed_type = yield from self.request_any_available_cot(self.HDCU, self.NICU)
-            with available_bed_type.request() as req:
-                
-                # Record the time the patient finished queuing
-                end_HDCU_wait = self.env.now
-                
-                # Calculate the time this patient spent queuing for a cot and
-                # store in the patient's attribute
-                birth.q_time_HDCU = end_HDCU_wait - start_cot_wait
-                
-                # Randomly sample the time the patient will spend in HDCU
-                sampled_HDCU_duration = round(random.expovariate(1.0 / g.avg_HDCU_stay),0)
-                sampled_HDCU_duration = int(sampled_HDCU_duration)
-                
-                # Freeze this function until that time has elapsed
-                yield self.env.timeout(sampled_HDCU_duration)
-                
-                # reset HDCU_pat flag
-                birth.HDCU_Pat = False
-                
-                birth.determine_destiny(g.chance_need_NICU_after_HDCU, 'NICU_Pat', 'nicu_chance')
-                if birth.NICU_Pat == False:
-                    birth.determine_destiny(g.chance_need_SCBU_after_HDCU, 'SCBU_Pat', 'scbu_chance')
-                    if birth.SCBU_Pat == False:
-                        return
-    
-        # Reinitialist the cot wait on exiting the previous Cot
-        start_cot_wait = self.env.now
-        
-        if birth.SCBU_Pat == True:
-            # Request a SCBU cot, a HDCU, or a NICU_cot
-            available_bed_type = yield from self.request_any_available_cot( self.SCBU, self.HDCU, self.NICU)
-            with available_bed_type.request() as req:
-                
-                # Record the time the patient finished queuing
-                end_SCBU_wait = self.env.now
-                
-                # Calculate the time this patient spent queuing for a cot and
-                # store in the patient's attribute
-                birth.q_time_SCBU = end_SCBU_wait - start_cot_wait
-                
-                # Randomly sample the time the patient will spend in NICU
-                # The mean is stored in the g class.
-                sampled_SCBU_duration = round(random.expovariate(1.0 / g.avg_SCBU_stay),0)
-                sampled_SCBU_duration = int(sampled_SCBU_duration)
-                
-                # Freeze this function until that time has elapsed
-                yield self.env.timeout(sampled_SCBU_duration)
-                
-                birth.SCBU_Pat = False
-                
-                birth.determine_destiny(g.chance_need_NICU_after_SCBU, 'NICU_Pat', 'nicu_chance')
-                if birth.NICU_Pat == False:
-                    birth.determine_destiny(g.chance_need_HDCU_after_SCBU, 'HDCU_Pat', 'hdcu_chance')
-                    if birth.HDCU_Pat == False:
-                        return
-        
-        # if self.env.now > g.warm_up_duration:
-        #     self.store_results(birth)
-    
-    def request_any_available_cot(self, *bed_types):
-        # Create request events for each bed type
-        requests = {bed_type: bed_type.request() for bed_type in bed_types}
+                yield from self.process_cot_request(
+                    self.NICU.request(),
+                    birth,
+                    start_cot_wait,
+                    g.avg_NICU_stay,
+                    [
+                        (g.chance_need_HDCU_after_NICU, 'HDCU_Pat', 'hdcu_chance'),
+                        (g.chance_need_SCBU_after_NICU, 'SCBU_Pat', 'scbu_chance')
+                    ],
+                    'NICU_Pat'
+                )
+                self.NICU.release(req)
+                break  
+                    
+            # Reinitialise the cot wait on exiting the previous Cot
+            start_cot_wait = self.env.now
+            
+            """Process HDU Requirement"""
+            if birth.HDCU_Pat:
 
-        while True:
-            # Freeze the function until the request for a cot can be met
-            available_bed = yield simpy.AnyOf(self.env, requests.values())
+                hdu_req = self.HDCU.request()
+                nicu_req = self.NICU.request()
 
-            # Check the available bed and return the preferred bed type
-            for bed_type in bed_types:
-                request = requests[bed_type]
-                if request in available_bed:
-                    return bed_type
+                requests = {self.HDCU: hdu_req, self.NICU: nicu_req}
+
+                # Make a request for each type of cot
+                results = yield simpy.AnyOf(self.env, requests.values())
+
+                # Check which request was successful and cancel the other
+                used_req = next(iter(results))  # The request that succeeded
+                used_res = next(res for res, req in requests.items() if req == used_req)  # The resource for that request
+
+                for res, req in requests.items():
+                    if req != used_req:
+                        req.cancel()  # Cancel the unused request
+                        res.release(req)
+
+                # Now process the used request
+                yield from self.process_cot_request(
+                    used_req,
+                    birth,
+                    start_cot_wait,
+                    g.avg_HDCU_stay if used_res == self.HDCU else g.avg_NICU_stay,
+                    [
+                        (g.chance_need_NICU_after_HDCU, 'NICU_Pat', 'nicu_chance'),
+                        (g.chance_need_SCBU_after_HDCU, 'SCBU_Pat', 'scbu_chance')
+                    ],
+                    'HDCU_Pat'
+                )
+                used_res.release(used_req)
+
+                break
+
+ 
+            # Reinitialise the cot wait on exiting the previous Cot
+            start_cot_wait = self.env.now
+        
+            """Process SCBU Requirement"""
+            if birth.SCBU_Pat:
+                
+                scbu_req = self.SCBU.request()
+                hdu_req = self.HDCU.request()
+                nicu_req = self.NICU.request()
+
+                requests = {self.SCBU: scbu_req, self.HDCU: hdu_req, self.NICU: nicu_req}
+
+                # Make a request for each type of cot
+                results = yield simpy.AnyOf(self.env, requests.values())
+
+                # Check which request was successful and cancel the other
+                used_req = next(iter(results))  # The request that succeeded
+                used_res = next(res for res, req in requests.items() if req == used_req)  # The resource for that request
+
+                for res, req in requests.items():
+                    if req != used_req:
+                        req.cancel()  # Cancel the unused request
+                        res.release(req)
+
+                # Now process the used request
+                yield from self.process_cot_request(
+                    used_req,
+                    birth,
+                    start_cot_wait,
+                    g.avg_HDCU_stay if used_res == self.HDCU else g.avg_NICU_stay,
+                    [
+                        (g.chance_need_NICU_after_SCBU, 'NICU_Pat', 'nicu_chance'),
+                        (g.chance_need_HDCU_after_SCBU, 'HDCU_Pat', 'hdcu_chance')
+                    ],
+                    'SCBU_Pat'
+                )
+                used_res.release(used_req)
+
+                break
+            
+            # Reinitialise the cot wait on exiting the previous Cot
+            start_cot_wait = self.env.now
             
 
     def monitor(self, resource):
@@ -358,9 +381,8 @@ class NCCU_Model:
                                                                         "Queue_Length": queue_length},
                                                                     ignore_index=True)
         
-    def monitor_resource(self, resource, dic):
+    def monitor_resource(self, resource):
         while True:
-            dic[self.env.now] = resource.count
             self.monitor(resource)  
             yield self.env.timeout(1)  # Check resource usage every 1 time unit  
 
@@ -380,9 +402,9 @@ class NCCU_Model:
         # Start entity generators
         self.env.process(self.generate_birth_arrivals())
         
-        self.env.process(self.monitor_resource(self.NICU, self.NICU_usage))
-        self.env.process(self.monitor_resource(self.HDCU, self.HDCU_usage))
-        self.env.process(self.monitor_resource(self.SCBU, self.SCBU_usage))
+        self.env.process(self.monitor_resource(self.NICU))
+        self.env.process(self.monitor_resource(self.HDCU))
+        self.env.process(self.monitor_resource(self.SCBU))
         
         # Run simulation
         self.env.run(until=g.sim_duration)
