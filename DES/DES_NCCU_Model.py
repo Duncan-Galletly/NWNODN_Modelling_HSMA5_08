@@ -38,21 +38,21 @@ class NamedResource(simpy.Resource):
         super().__init__(*args, **kwargs)
         self.name = name
 
-def patch_resource(resource, pre=None, post=None):
-    def get_wrapper(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            if pre:
-                pre(resource)
-            ret = func(*args, **kwargs)
-            if post:
-                post(resource)
-            return ret
-        return wrapper
+# def patch_resource(resource, pre=None, post=None):
+#     def get_wrapper(func):
+#         @wraps(func)
+#         def wrapper(*args, **kwargs):
+#             if pre:
+#                 pre(resource)
+#             ret = func(*args, **kwargs)
+#             if post:
+#                 post(resource)
+#             return ret
+#         return wrapper
 
-    for name in ['put', 'get', 'request', 'release']:
-        if hasattr(resource, name):
-            setattr(resource, name, get_wrapper(getattr(resource, name)))
+#     for name in ['put', 'get', 'request', 'release']:
+#         if hasattr(resource, name):
+#             setattr(resource, name, get_wrapper(getattr(resource, name)))
 
 
 # Class to store global parameter values.  We don't create an instance of this
@@ -114,7 +114,7 @@ class Birth_Patient:
             setattr(self, var_pat, True)
             setattr(self, var_chance, sc)
     
-            
+    # NOT NORMALL IN USE DUE TO SEVERE PERFORMANCE ISSUES, ONLY HERE TO MONITOR WHEN NECESSARY        
     def pat_monitor(self,run_number, day_number):
         id = self.id 
         nicu_pat = self.NICU_Pat
@@ -157,9 +157,9 @@ class NCCU_Model:
         self.HDCU = NamedResource(self.env, capacity=g.number_of_HDCU_cots, name='HDCU')
         self.SCBU = NamedResource(self.env, capacity=g.number_of_SCBU_cots, name='SCBU')
         
-        patch_resource(self.NICU, post=self.monitor)
-        patch_resource(self.HDCU, post=self.monitor)
-        patch_resource(self.SCBU, post=self.monitor)
+        # patch_resource(self.NICU, post=self.monitor)
+        # patch_resource(self.HDCU, post=self.monitor)
+        # patch_resource(self.SCBU, post=self.monitor)
 
         self.run_number = run_number
         
@@ -371,7 +371,6 @@ class NCCU_Model:
             queue_length = len(resource.queue) # number of waiting
 
             # append data to the dataframe
-        
             self.resource_monitor_df = self.resource_monitor_df.append({"Run_Number": self.run_number,
                                                                         "Day": day, 
                                                                         "Resource": resource_name, 
@@ -391,7 +390,15 @@ class NCCU_Model:
             writer = csv.writer(f, delimiter=",")    
             for index, row in self.resource_monitor_df.iterrows():
                 writer.writerow(row)
-                
+    
+    def daily_scheduler(self):
+        while True:
+            # Wait for 1 day
+            yield self.env.timeout(1)
+            # Call monitor for each resource
+            self.monitor(self.NICU)
+            self.monitor(self.HDCU)
+            self.monitor(self.SCBU)            
 
 
     # The run method starts up the entity generators, and tells SimPy to start
@@ -402,9 +409,11 @@ class NCCU_Model:
         # Start entity generators
         self.env.process(self.generate_birth_arrivals())
         
-        self.env.process(self.monitor_resource(self.NICU))
-        self.env.process(self.monitor_resource(self.HDCU))
-        self.env.process(self.monitor_resource(self.SCBU))
+        # self.env.process(self.monitor_resource(self.NICU))
+        # self.env.process(self.monitor_resource(self.HDCU))
+        # self.env.process(self.monitor_resource(self.SCBU))
+        
+        self.env.process(self.daily_scheduler())
         
         # Run simulation
         self.env.run(until=g.sim_duration)
