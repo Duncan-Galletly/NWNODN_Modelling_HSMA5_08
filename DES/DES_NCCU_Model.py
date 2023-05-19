@@ -8,7 +8,6 @@ from tqdm import tqdm
 from functools import partial, wraps
 warnings.filterwarnings('ignore')
 
-
 r_file_name = "./resource_monitor_data.csv"
 r_headers = ["Run_Number", "Day", "Resource", "Daily_Use", "Total_Capacity", "Available_Capacity","Queue_Lenth"] 
 # Check if the file exists
@@ -33,26 +32,10 @@ with open(r_file_name, "w", newline='') as f:
 
 # Monkey-patching some of a resource’s methods allows you to gather all the data you need.
 # Here we add callbacks to a resource that get called just before or after a get / request or a put / release event:
-class NamedResource(simpy.Resource):
+class NamedResource(simpy.PriorityResource):
     def __init__(self, *args, name=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = name
-
-# def patch_resource(resource, pre=None, post=None):
-#     def get_wrapper(func):
-#         @wraps(func)
-#         def wrapper(*args, **kwargs):
-#             if pre:
-#                 pre(resource)
-#             ret = func(*args, **kwargs)
-#             if post:
-#                 post(resource)
-#             return ret
-#         return wrapper
-
-#     for name in ['put', 'get', 'request', 'release']:
-#         if hasattr(resource, name):
-#             setattr(resource, name, get_wrapper(getattr(resource, name)))
 
 
 # Class to store global parameter values.  We don't create an instance of this
@@ -66,29 +49,29 @@ class g:
     chance_need_HDCU = 0.035 # percentage chance HDCU needed
     chance_need_SCBU = 0.155 # percentage chance SCBU needed
     chance_discharge = 0.8 # percentage chance now additional care needed
-    
+
     chance_need_HDCU_after_NICU = 0.2 # percentage chance HDCU needed after discharge from NICU
     chance_need_SCBU_after_NICU = 0.2 # percentage chance SCBU needed after discharge from NICU
     # percentage chance to discharge is remainder
-    
+
     chance_need_NICU_after_HDCU = 0.05 # percentage chance NICU needed after discharge from HDCU
     chance_need_SCBU_after_HDCU = 0.2 # percentage chance SCBU needed after discharge from HDCU
     # percentage chance to discharge is remainder
-    
+
     chance_need_NICU_after_SCBU = 0.05 # percentage chance NICU needed after discharge from SCBU
     chance_need_HDCU_after_SCBU = 0.2 # percentage chance SCBU needed after discharge from SCBU
     # percentage chance to discharge is remainder
-    
+
     avg_NICU_stay = 5 # average stay in care setting in whole days
     avg_HDCU_stay = 5 # average stay in care setting in whole days
     avg_SCBU_stay = 5 # average stay in care setting in whole days
-    number_of_NICU_cots = 3 # Unit capacity of cot type
-    number_of_HDCU_cots = 3 # Unit capacity of cot type
+    number_of_NICU_cots = 3  # Unit capacity of cot type
+    number_of_HDCU_cots = 3  # Unit capacity of cot type
     number_of_SCBU_cots = 12 # Unit capacity of cot type
     sim_duration = 730 # duration of simulation 
     number_of_runs = 30 # number of runs 
     warm_up_duration =365 # number of cycles before starting data collection
-    
+
 # Class representing our births requiring additional care.
 class Birth_Patient:
     def __init__(self, p_id, prob_NICU, prob_HDCU, prob_SCBU):
@@ -113,7 +96,7 @@ class Birth_Patient:
         if sc < prob_var:
             setattr(self, var_pat, True)
             setattr(self, var_chance, sc)
-    
+
     # NOT NORMALL IN USE DUE TO SEVERE PERFORMANCE ISSUES, ONLY HERE TO MONITOR WHEN NECESSARY        
     def pat_monitor(self,run_number, day_number):
         id = self.id 
@@ -138,13 +121,13 @@ class Birth_Patient:
                                                                     "scbu_pat": scbu_pat,
                                                                     "scbu_prob": scbu_prob},
                                                                 ignore_index=True)
-        
+
     def write_pat_details(self):
         with open("./patient_monitor_data.csv", "a", newline='') as f:
             writer = csv.writer(f, delimiter=",")    
             for index, row in self.pat_monitor_df.iterrows():
                 writer.writerow(row)
-        
+
 # Class representing our model of Neonatal Unit.
 class NCCU_Model:
     
@@ -152,19 +135,15 @@ class NCCU_Model:
     def __init__(self, run_number):
         self.env = simpy.Environment()
         self.patient_counter = 0
-        
+
         self.NICU = NamedResource(self.env, capacity=g.number_of_NICU_cots, name='NICU')
         self.HDCU = NamedResource(self.env, capacity=g.number_of_HDCU_cots, name='HDCU')
         self.SCBU = NamedResource(self.env, capacity=g.number_of_SCBU_cots, name='SCBU')
         
-        # patch_resource(self.NICU, post=self.monitor)
-        # patch_resource(self.HDCU, post=self.monitor)
-        # patch_resource(self.SCBU, post=self.monitor)
-
         self.run_number = run_number
-        
+
         self.mean_q_time_cot = 0
-        
+
         """2"""
         self.results_df = pd.DataFrame()
         self.results_df["P_ID"] = []
@@ -173,7 +152,7 @@ class NCCU_Model:
         self.results_df["Q_Time_HDCU"] = []
         self.results_df["Q_Time_SCBU"] = []
         self.results_df.set_index("P_ID", inplace=True)
-        
+
         self.resource_monitor_df = pd.DataFrame()
         self.results_df["Run_Number"] = []
         self.results_df["Day"] = []
@@ -182,7 +161,7 @@ class NCCU_Model:
         self.results_df["Total_Capacity"] = []
         self.results_df["Available_Capacity"] = []
         self.results_df["Queue_Length"] = []
-        
+
         self.NICU_usage = {}
         self.HDCU_usage = {}
         self.SCBU_usage = {}
@@ -197,27 +176,26 @@ class NCCU_Model:
             for i in range(sampled_num):
                 # Increment the patient counter by 1
                 self.patient_counter += 1
-                
+
                 # Create a new patient instance of the Birth_Patient class, 
                 # and give the patient an ID determined by the patient counter
                 birth = Birth_Patient(self.patient_counter, g.chance_need_NICU, g.chance_need_HDCU, g.chance_need_SCBU)
-                
+
                 birth.determine_destiny(g.chance_need_NICU, 'NICU_Pat', 'nicu_chance')
                 birth.determine_destiny(g.chance_need_HDCU, 'HDCU_Pat', 'hdcu_chance')
                 birth.determine_destiny(g.chance_need_SCBU, 'SCBU_Pat', 'scbu_chance')
-                
+
                 #THIS MONITORING SIGNIFICANTLY DEGRADES PERFORMANCE ONLY UN_COMMENT 
                 #TEMPORARILY TO CHECK VARIABLE ASSIGNMENTS
                 # birth.pat_monitor(self.run_number, self.env.now)
                 # birth.write_pat_details()
-                
+
                 # Get the SimPy environment to run the manage_birth_resource method
                 # with this patient
                 self.env.process(self.manage_birth_resource(birth))
-                
+
                 # Freeze this function until that time has elapsed
             yield self.env.timeout(1)
-            
             
     def process_cot_request(self, cot_request, birth, start_cot_wait, avg_stay, next_chances, cot_pat):
         with cot_request:
@@ -244,20 +222,20 @@ class NCCU_Model:
                 if not getattr(birth, pat):
                     break
 
-            
+
     # A method that models the processes for births and assigning resources.
     # The method needs to be passed a patient who may require resources
     def manage_birth_resource(self, birth):
         # Record the time the patient started queuing for a cot
         start_cot_wait = self.env.now
-        
+
         # Release immediately any agents that dont require any resource
         if not (birth.NICU_Pat or birth.HDCU_Pat or birth.SCBU_Pat): 
             return
-        
+
         # Open a while so that any required cot can be processed while needed
         while birth.NICU_Pat or birth.HDCU_Pat or birth.SCBU_Pat:
-            
+
             """Process NICU Requirement"""
             if birth.NICU_Pat == True:
                 # Request a NICU cot only
@@ -276,15 +254,17 @@ class NCCU_Model:
                 )
                 self.NICU.release(req)
                 break  
-                    
+
             # Reinitialise the cot wait on exiting the previous Cot
             start_cot_wait = self.env.now
-            
+
             """Process HDU Requirement"""
+            
+            
             if birth.HDCU_Pat:
 
-                hdu_req = self.HDCU.request()
-                nicu_req = self.NICU.request()
+                hdu_req = self.HDCU.request(priority=0)
+                nicu_req = self.NICU.request(priority=1)
 
                 requests = {self.HDCU: hdu_req, self.NICU: nicu_req}
 
@@ -316,16 +296,15 @@ class NCCU_Model:
 
                 break
 
- 
             # Reinitialise the cot wait on exiting the previous Cot
             start_cot_wait = self.env.now
         
             """Process SCBU Requirement"""
             if birth.SCBU_Pat:
                 
-                scbu_req = self.SCBU.request()
-                hdu_req = self.HDCU.request()
-                nicu_req = self.NICU.request()
+                scbu_req = self.SCBU.request(priority=0)
+                hdu_req = self.HDCU.request(priority=1)
+                nicu_req = self.NICU.request(priority=2)
 
                 requests = {self.SCBU: scbu_req, self.HDCU: hdu_req, self.NICU: nicu_req}
 
@@ -360,7 +339,6 @@ class NCCU_Model:
             # Reinitialise the cot wait on exiting the previous Cot
             start_cot_wait = self.env.now
             
-
     def monitor(self, resource):
         if self.env.now > g.warm_up_duration:
             day = resource._env.now  # current simulation time
@@ -398,8 +376,7 @@ class NCCU_Model:
             # Call monitor for each resource
             self.monitor(self.NICU)
             self.monitor(self.HDCU)
-            self.monitor(self.SCBU)            
-
+            self.monitor(self.SCBU)           
 
     # The run method starts up the entity generators, and tells SimPy to start
     # running the environment for the duration specified in the g class. After
@@ -409,10 +386,6 @@ class NCCU_Model:
         # Start entity generators
         self.env.process(self.generate_birth_arrivals())
         
-        # self.env.process(self.monitor_resource(self.NICU))
-        # self.env.process(self.monitor_resource(self.HDCU))
-        # self.env.process(self.monitor_resource(self.SCBU))
-        
         self.env.process(self.daily_scheduler())
         
         # Run simulation
@@ -421,10 +394,8 @@ class NCCU_Model:
         # Write run results to file
         self.write_run_results()
         
-
 # For the number of runs specified in the g class, create an instance of the
 # NCCU_Model class, and call its run method
 for run in tqdm(range(g.number_of_runs), desc="Running simulations"):
     my_NCCU_model = NCCU_Model(run)
     my_NCCU_model.run()
-
