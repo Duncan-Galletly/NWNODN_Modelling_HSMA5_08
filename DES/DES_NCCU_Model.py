@@ -50,21 +50,21 @@ class g:
     chance_need_SCBU = 0.155 # percentage chance SCBU needed
     chance_discharge = 0.8 # percentage chance now additional care needed
 
-    chance_need_HDCU_after_NICU = 0.2 # percentage chance HDCU needed after discharge from NICU
-    chance_need_SCBU_after_NICU = 0.2 # percentage chance SCBU needed after discharge from NICU
+    chance_need_HDCU_after_NICU = 0.028 # percentage chance HDCU needed after discharge from NICU
+    chance_need_SCBU_after_NICU = 0.087 # percentage chance SCBU needed after discharge from NICU
     # percentage chance to discharge is remainder
 
-    chance_need_NICU_after_HDCU = 0.05 # percentage chance NICU needed after discharge from HDCU
-    chance_need_SCBU_after_HDCU = 0.2 # percentage chance SCBU needed after discharge from HDCU
+    chance_need_NICU_after_HDCU = 0.024 # percentage chance NICU needed after discharge from HDCU
+    chance_need_SCBU_after_HDCU = 0.125 # percentage chance SCBU needed after discharge from HDCU
     # percentage chance to discharge is remainder
 
-    chance_need_NICU_after_SCBU = 0.05 # percentage chance NICU needed after discharge from SCBU
-    chance_need_HDCU_after_SCBU = 0.2 # percentage chance SCBU needed after discharge from SCBU
+    chance_need_NICU_after_SCBU = 0.003 # percentage chance NICU needed after discharge from SCBU
+    chance_need_HDCU_after_SCBU = 0.017 # percentage chance SCBU needed after discharge from SCBU
     # percentage chance to discharge is remainder
 
-    avg_NICU_stay = 5 # average stay in care setting in whole days
-    avg_HDCU_stay = 5 # average stay in care setting in whole days
-    avg_SCBU_stay = 5 # average stay in care setting in whole days
+    avg_NICU_stay = 12 # average stay in care setting in whole days
+    avg_HDCU_stay = 12 # average stay in care setting in whole days
+    avg_SCBU_stay = 8 # average stay in care setting in whole days
     number_of_NICU_cots = 3  # Unit capacity of cot type
     number_of_HDCU_cots = 3  # Unit capacity of cot type
     number_of_SCBU_cots = 12 # Unit capacity of cot type
