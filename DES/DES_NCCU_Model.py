@@ -45,9 +45,9 @@ class g:
     # day_births_inter is representative of the number of births per day
     day_births_inter = 8.2  # number of births per day - 3000 per year is around 8.2 per day, 
                             #this is randomly sampled on an exponential curve
-    chance_need_NICU = 0.01 # percentage chance NICU needed
-    chance_need_HDCU = 0.035 # percentage chance HDCU needed
-    chance_need_SCBU = 0.155 # percentage chance SCBU needed
+    chance_need_NICU = 0.0233 # percentage chance NICU needed - 70 oo 3000 in 21-22 at warrington
+    chance_need_HDCU = 0.0166 # percentage chance HDCU needed - 44 oo 3000 in 21-22 at warrington
+    chance_need_SCBU = 0.0343 # percentage chance SCBU needed - 103 oo 3000 in 21-22 at warrington
     chance_discharge = 0.8 # percentage chance now additional care needed
 
     chance_need_HDCU_after_NICU = 0.028 # percentage chance HDCU needed after discharge from NICU
