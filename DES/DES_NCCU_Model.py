@@ -43,12 +43,13 @@ class NamedResource(simpy.PriorityResource):
 class g:
     # As initial model was set up for time in minutes and we are modelling days
     # day_births_inter is representative of the number of births per day
-    day_births_inter = 8.2  # number of births per day - 3000 per year is around 8.2 per day, 
+    annual_birth_rate = 3000
+    day_births_inter = annual_birth_rate / 365  # number of births per day - 3000 per year is around 8.2 per day, 
                             #this is randomly sampled on an exponential curve
     chance_need_NICU = 0.0233 # percentage chance NICU needed - 70 oo 3000 in 21-22 at warrington
     chance_need_HDCU = 0.0166 # percentage chance HDCU needed - 44 oo 3000 in 21-22 at warrington
     chance_need_SCBU = 0.0343 # percentage chance SCBU needed - 103 oo 3000 in 21-22 at warrington
-    chance_discharge = 0.8 # percentage chance now additional care needed
+    # percentage chance to discharge is remainder
 
     chance_need_HDCU_after_NICU = 0.028 # percentage chance HDCU needed after discharge from NICU
     chance_need_SCBU_after_NICU = 0.087 # percentage chance SCBU needed after discharge from NICU
@@ -62,9 +63,9 @@ class g:
     chance_need_HDCU_after_SCBU = 0.017 # percentage chance SCBU needed after discharge from SCBU
     # percentage chance to discharge is remainder
 
-    avg_NICU_stay = 12 # average stay in care setting in whole days
-    avg_HDCU_stay = 12 # average stay in care setting in whole days
-    avg_SCBU_stay = 8 # average stay in care setting in whole days
+    avg_NICU_stay = 12.67 # average stay in care setting in whole days
+    avg_HDCU_stay = 12.69 # average stay in care setting in whole days
+    avg_SCBU_stay = 8.75 # average stay in care setting in whole days
     number_of_NICU_cots = 3  # Unit capacity of cot type
     number_of_HDCU_cots = 3  # Unit capacity of cot type
     number_of_SCBU_cots = 12 # Unit capacity of cot type
