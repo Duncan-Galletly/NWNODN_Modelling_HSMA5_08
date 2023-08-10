@@ -101,7 +101,7 @@ class g:
             st.markdown("""These are the average lengths of time spent in each setting, 
                         it is not advised to alter these as they are derived from badgernet data, 
                         but the could be altered if you wanted to look at certain 'what if' scenarios""") 
-            avg_NICU_stay = st.number_input("Average length of stay in a LCU cot",12.67, None, 12.67) # average stay in care setting in whole days
+            avg_NICU_stay = st.number_input("Average length of stay in a NICU cot",12.67, None, 12.67) # average stay in care setting in whole days
             avg_HDCU_stay = st.number_input("Average length of stay in a LCU cot",12.69, None, 12.69) # average stay in care setting in whole days
             avg_SCBU_stay = st.number_input("Average length of stay in a SCBU cot",8.75, None, 8.75)  # average stay in care setting in whole days
             
