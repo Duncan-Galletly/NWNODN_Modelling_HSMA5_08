@@ -1,0 +1,875 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20214.23.0310.0811                               -->
+<workbook original-version='18.1' source-build='2021.4.17 (20214.23.0310.0811)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AccessibleZoneTabOrder.true...AccessibleZoneTabOrder />
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <AutoCreateAndUpdateDSDPhoneLayouts />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SetMembershipControl />
+    <SheetIdentifierTracking />
+    <SortTagCleanup />
+    <WindowsPersistSimpleIdentifiers />
+    <ZoneBackgroundTransparency />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <_.fcp.AnimationOnByDefault.false...style>
+    <_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule element='animation'>
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
+  </_.fcp.AnimationOnByDefault.false...style>
+  <datasources>
+    <datasource caption='resource_monitor_data' inline='true' name='federated.0y06r8i012k6fs1g6mrv90oe7af6' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='resource_monitor_data' name='textscan.0e6uf321qz7u3l14vj8r2043ndqz'>
+            <connection class='textscan' directory='I:/CSUs/NECS/Data and Systems/DC BI/Advanced Analytics/NWNODN_Modelling_HSMA5_08' filename='resource_monitor_data.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='textscan.0e6uf321qz7u3l14vj8r2043ndqz' name='resource_monitor_data.csv' table='[resource_monitor_data#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_GB' separator=','>
+            <column datatype='integer' name='Run_Number' ordinal='0' />
+            <column datatype='integer' name='Day' ordinal='1' />
+            <column datatype='string' name='Resource' ordinal='2' />
+            <column datatype='integer' name='Daily_Use' ordinal='3' />
+            <column datatype='integer' name='Total_Capacity' ordinal='4' />
+            <column datatype='integer' name='Available_Capacity' ordinal='5' />
+            <column datatype='integer' name='Queue_Lenth' ordinal='6' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='textscan.0e6uf321qz7u3l14vj8r2043ndqz' name='resource_monitor_data.csv' table='[resource_monitor_data#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_GB' separator=','>
+            <column datatype='integer' name='Run_Number' ordinal='0' />
+            <column datatype='integer' name='Day' ordinal='1' />
+            <column datatype='string' name='Resource' ordinal='2' />
+            <column datatype='integer' name='Daily_Use' ordinal='3' />
+            <column datatype='integer' name='Total_Capacity' ordinal='4' />
+            <column datatype='integer' name='Available_Capacity' ordinal='5' />
+            <column datatype='integer' name='Queue_Lenth' ordinal='6' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[resource_monitor_data.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_GB&quot;</attribute>
+              <attribute datatype='string' name='currency'>&quot;£&quot;</attribute>
+              <attribute datatype='string' name='debit-close-char'>&quot;&quot;</attribute>
+              <attribute datatype='string' name='debit-open-char'>&quot;&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_GB&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Run_Number</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[Run_Number]</local-name>
+            <parent-name>[resource_monitor_data.csv]</parent-name>
+            <remote-alias>Run_Number</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[resource_monitor_data.csv_82A2A06001EE43439D83731E2C8D85F3]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Day</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[Day]</local-name>
+            <parent-name>[resource_monitor_data.csv]</parent-name>
+            <remote-alias>Day</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[resource_monitor_data.csv_82A2A06001EE43439D83731E2C8D85F3]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Resource</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Resource]</local-name>
+            <parent-name>[resource_monitor_data.csv]</parent-name>
+            <remote-alias>Resource</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RGB' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[resource_monitor_data.csv_82A2A06001EE43439D83731E2C8D85F3]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Daily_Use</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[Daily_Use]</local-name>
+            <parent-name>[resource_monitor_data.csv]</parent-name>
+            <remote-alias>Daily_Use</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[resource_monitor_data.csv_82A2A06001EE43439D83731E2C8D85F3]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Total_Capacity</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[Total_Capacity]</local-name>
+            <parent-name>[resource_monitor_data.csv]</parent-name>
+            <remote-alias>Total_Capacity</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[resource_monitor_data.csv_82A2A06001EE43439D83731E2C8D85F3]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Available_Capacity</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[Available_Capacity]</local-name>
+            <parent-name>[resource_monitor_data.csv]</parent-name>
+            <remote-alias>Available_Capacity</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[resource_monitor_data.csv_82A2A06001EE43439D83731E2C8D85F3]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Queue_Lenth</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[Queue_Lenth]</local-name>
+            <parent-name>[resource_monitor_data.csv]</parent-name>
+            <remote-alias>Queue_Lenth</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[resource_monitor_data.csv_82A2A06001EE43439D83731E2C8D85F3]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='Available Capacity' datatype='integer' name='[Available_Capacity]' role='measure' type='quantitative' />
+      <column caption='Daily Use' datatype='integer' name='[Daily_Use]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[Day]' role='dimension' type='quantitative' />
+      <column caption='Queue Lenth' datatype='integer' name='[Queue_Lenth]' role='measure' type='quantitative' />
+      <column datatype='string' name='[Resource]' role='dimension' type='nominal' />
+      <column caption='Run Number' datatype='integer' name='[Run_Number]' role='dimension' type='ordinal' />
+      <column caption='Total Capacity' datatype='integer' name='[Total_Capacity]' role='measure' type='quantitative' />
+      <_.fcp.ObjectModelTableType.true...column caption='resource_monitor_data.csv' datatype='table' name='[__tableau_internal_object_id__].[resource_monitor_data.csv_82A2A06001EE43439D83731E2C8D85F3]' role='measure' type='quantitative' />
+      <column-instance column='[Resource]' derivation='None' name='[none:Resource:nk]' pivot='key' type='nominal' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[none:Resource:nk]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;HDCU&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;SCBU&quot;</bucket>
+            </map>
+            <map to='#edc948'>
+              <bucket>&quot;NICU&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United Kingdom&quot;' />
+      </semantic-values>
+      <date-options start-of-week='monday' />
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='resource_monitor_data.csv' id='resource_monitor_data.csv_82A2A06001EE43439D83731E2C8D85F3'>
+            <properties context=''>
+              <relation connection='textscan.0e6uf321qz7u3l14vj8r2043ndqz' name='resource_monitor_data.csv' table='[resource_monitor_data#csv]' type='table'>
+                <columns character-set='UTF-8' header='yes' locale='en_GB' separator=','>
+                  <column datatype='integer' name='Run_Number' ordinal='0' />
+                  <column datatype='integer' name='Day' ordinal='1' />
+                  <column datatype='string' name='Resource' ordinal='2' />
+                  <column datatype='integer' name='Daily_Use' ordinal='3' />
+                  <column datatype='integer' name='Total_Capacity' ordinal='4' />
+                  <column datatype='integer' name='Available_Capacity' ordinal='5' />
+                  <column datatype='integer' name='Queue_Lenth' ordinal='6' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Actual Runs'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='resource_monitor_data' name='federated.0y06r8i012k6fs1g6mrv90oe7af6' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0y06r8i012k6fs1g6mrv90oe7af6'>
+            <column caption='Daily Use' datatype='integer' name='[Daily_Use]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Day]' role='dimension' type='quantitative' />
+            <column caption='Queue Lenth' datatype='integer' name='[Queue_Lenth]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Resource]' role='dimension' type='nominal' />
+            <column caption='Run Number' datatype='integer' name='[Run_Number]' role='dimension' type='ordinal' />
+            <column-instance column='[Day]' derivation='None' name='[none:Day:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Resource]' derivation='None' name='[none:Resource:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Run_Number]' derivation='None' name='[none:Run_Number:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Daily_Use]' derivation='Sum' name='[sum:Daily_Use:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Queue_Lenth]' derivation='Sum' name='[sum:Queue_Lenth:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <manual-sort column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;NICU&quot;</bucket>
+              <bucket>&quot;HDCU&quot;</bucket>
+              <bucket>&quot;SCBU&quot;</bucket>
+            </dictionary>
+          </manual-sort>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='false' />
+              </style-rule>
+            </style>
+          </pane>
+          <pane id='3' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[sum:Daily_Use:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='false' />
+              </style-rule>
+            </style>
+          </pane>
+          <pane id='4' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[sum:Queue_Lenth:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='false' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>([federated.0y06r8i012k6fs1g6mrv90oe7af6].[sum:Daily_Use:qk] + [federated.0y06r8i012k6fs1g6mrv90oe7af6].[sum:Queue_Lenth:qk])</rows>
+        <cols>[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Day:qk]</cols>
+        <pages>
+          <column>[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Run_Number:ok]</column>
+        </pages>
+        <page-trail-options enabled='true' mark-type='all' />
+      </table>
+      <simple-id uuid='{AE520BD6-8B2B-49CB-A29E-14E6FDC715DF}' />
+    </worksheet>
+    <worksheet name='Averages'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='18'>&lt;Sheet Name&gt;</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='resource_monitor_data' name='federated.0y06r8i012k6fs1g6mrv90oe7af6' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0y06r8i012k6fs1g6mrv90oe7af6'>
+            <column caption='Daily Use' datatype='integer' name='[Daily_Use]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Day]' role='dimension' type='quantitative' />
+            <column caption='Queue Lenth' datatype='integer' name='[Queue_Lenth]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Resource]' role='dimension' type='nominal' />
+            <column-instance column='[Daily_Use]' derivation='Avg' name='[avg:Daily_Use:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Queue_Lenth]' derivation='Avg' name='[avg:Queue_Lenth:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Day]' derivation='None' name='[none:Day:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Resource]' derivation='None' name='[none:Resource:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <manual-sort column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;NICU&quot;</bucket>
+              <bucket>&quot;HDCU&quot;</bucket>
+              <bucket>&quot;SCBU&quot;</bucket>
+            </dictionary>
+          </manual-sort>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='false' />
+              </style-rule>
+            </style>
+          </pane>
+          <pane id='3' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[avg:Daily_Use:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='false' />
+              </style-rule>
+            </style>
+          </pane>
+          <pane id='4' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[avg:Queue_Lenth:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='false' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>([federated.0y06r8i012k6fs1g6mrv90oe7af6].[avg:Daily_Use:qk] + [federated.0y06r8i012k6fs1g6mrv90oe7af6].[avg:Queue_Lenth:qk])</rows>
+        <cols>[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Day:qk]</cols>
+        <page-trail-options enabled='true' mark-type='all' />
+      </table>
+      <simple-id uuid='{A4FD8EB2-1594-43F9-992B-5AF5FB8F1874}' />
+    </worksheet>
+    <worksheet name='Sheet 2 (2)'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='resource_monitor_data' name='federated.0y06r8i012k6fs1g6mrv90oe7af6' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0y06r8i012k6fs1g6mrv90oe7af6'>
+            <column caption='Daily Use' datatype='integer' name='[Daily_Use]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Resource]' role='dimension' type='nominal' />
+            <column caption='Run Number' datatype='integer' name='[Run_Number]' role='dimension' type='ordinal' />
+            <column-instance column='[Resource]' derivation='None' name='[none:Resource:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Run_Number]' derivation='None' name='[none:Run_Number:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Daily_Use]' derivation='Sum' name='[sum:Daily_Use:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <manual-sort column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;NICU&quot;</bucket>
+              <bucket>&quot;HDCU&quot;</bucket>
+              <bucket>&quot;SCBU&quot;</bucket>
+            </dictionary>
+          </manual-sort>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='font-size' data-class='subtotal' value='22' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='width' field='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' value='312' />
+            <format attr='height-header' value='20' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='font-size' value='14' />
+            <format attr='font-weight' value='bold' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' />
+              <text column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[sum:Daily_Use:qk]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]</rows>
+        <cols />
+        <pages>
+          <column>[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Run_Number:ok]</column>
+        </pages>
+      </table>
+      <simple-id uuid='{72E918E3-5D0B-4E05-994E-5E0D3A9879F3}' />
+    </worksheet>
+    <worksheet name='Sheet 4 (2)'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='resource_monitor_data' name='federated.0y06r8i012k6fs1g6mrv90oe7af6' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0y06r8i012k6fs1g6mrv90oe7af6'>
+            <column caption='Available Capacity' datatype='integer' name='[Available_Capacity]' role='measure' type='quantitative' />
+            <column caption='Daily Use' datatype='integer' name='[Daily_Use]' role='measure' type='quantitative' />
+            <column caption='Queue Lenth' datatype='integer' name='[Queue_Lenth]' role='measure' type='quantitative' />
+            <column datatype='string' name='[Resource]' role='dimension' type='nominal' />
+            <column-instance column='[Available_Capacity]' derivation='Avg' name='[avg:Available_Capacity:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Daily_Use]' derivation='Avg' name='[avg:Daily_Use:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Queue_Lenth]' derivation='Avg' name='[avg:Queue_Lenth:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Resource]' derivation='None' name='[none:Resource:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[:Measure Names]'>
+            <groupfilter function='union' user:op='manual'>
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0y06r8i012k6fs1g6mrv90oe7af6].[avg:Available_Capacity:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0y06r8i012k6fs1g6mrv90oe7af6].[avg:Daily_Use:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0y06r8i012k6fs1g6mrv90oe7af6].[avg:Queue_Lenth:qk]&quot;' />
+            </groupfilter>
+          </filter>
+          <manual-sort column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;NICU&quot;</bucket>
+              <bucket>&quot;HDCU&quot;</bucket>
+              <bucket>&quot;SCBU&quot;</bucket>
+            </dictionary>
+          </manual-sort>
+          <slices>
+            <column>[federated.0y06r8i012k6fs1g6mrv90oe7af6].[:Measure Names]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='worksheet'>
+            <format attr='font-size' value='15' />
+            <format attr='font-weight' value='bold' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' />
+              <text column='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[Multiple Values]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]</rows>
+        <cols>[federated.0y06r8i012k6fs1g6mrv90oe7af6].[:Measure Names]</cols>
+      </table>
+      <simple-id uuid='{251BB538-FEA3-4681-B20F-7B8E24216F49}' />
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard _.fcp.AccessibleZoneTabOrder.true...enable-sort-zone-taborder='true' name='Average'>
+      <style />
+      <size maxheight='800' maxwidth='1000' minheight='800' minwidth='1000' />
+      <zones>
+        <zone h='100000' id='4' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone h='77250' id='7' param='horz' type-v2='layout-flow' w='98400' x='800' y='1000'>
+            <zone h='77250' id='5' type-v2='layout-basic' w='82400' x='800' y='1000'>
+              <zone h='77250' id='3' name='Averages' w='82400' x='800' y='1000'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+            </zone>
+            <zone fixed-size='160' h='77250' id='6' is-fixed='true' param='vert' type-v2='layout-flow' w='16000' x='83200' y='1000'>
+              <zone h='11625' id='8' name='Averages' pane-specification-id='3' param='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' type-v2='color' w='16000' x='83200' y='1000'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+            </zone>
+          </zone>
+          <zone h='20750' id='9' name='Sheet 4 (2)' show-title='false' w='98400' x='800' y='78250'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+      </zones>
+      <devicelayouts>
+        <devicelayout auto-generated='true' name='Phone'>
+          <size maxheight='700' minheight='700' sizing-mode='vscroll' />
+          <zones>
+            <zone h='100000' id='13' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98000' id='12' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000'>
+                <zone fixed-size='280' h='77250' id='3' is-fixed='true' name='Averages' w='82400' x='800' y='1000'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='11625' id='8' name='Averages' pane-specification-id='3' param='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' type-v2='color' w='16000' x='83200' y='1000'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='158' h='20750' id='9' is-fixed='true' name='Sheet 4 (2)' show-title='false' w='98400' x='800' y='78250'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+              </zone>
+              <zone-style>
+                <format attr='border-color' value='#000000' />
+                <format attr='border-style' value='none' />
+                <format attr='border-width' value='0' />
+                <format attr='margin' value='8' />
+              </zone-style>
+            </zone>
+          </zones>
+        </devicelayout>
+      </devicelayouts>
+      <simple-id uuid='{AE57984C-BBB1-43FF-B40F-05EDA8E56295}' />
+    </dashboard>
+    <dashboard _.fcp.AccessibleZoneTabOrder.true...enable-sort-zone-taborder='true' name='Runs'>
+      <style />
+      <size maxheight='800' maxwidth='1000' minheight='800' minwidth='1000' />
+      <zones>
+        <zone h='100000' id='4' type-v2='layout-basic' w='100000' x='0' y='0'>
+          <zone h='74000' id='7' param='horz' type-v2='layout-flow' w='98400' x='800' y='1000'>
+            <zone h='74000' id='5' type-v2='layout-basic' w='82400' x='800' y='1000'>
+              <zone h='74000' id='3' name='Actual Runs' w='82400' x='800' y='1000'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+            </zone>
+            <zone fixed-size='160' h='74000' id='6' is-fixed='true' param='vert' type-v2='layout-flow' w='16000' x='83200' y='1000'>
+              <zone h='11625' id='8' name='Actual Runs' pane-specification-id='3' param='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' type-v2='color' w='16000' x='83200' y='1000'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+              <zone count='1' h='14875' id='9' looped='1' name='Actual Runs' name1='Sheet 2 (2)' synchronized='1' type-v2='currpage' w='16000' x='83200' y='12625'>
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+            </zone>
+          </zone>
+          <zone h='24000' id='10' name='Sheet 2 (2)' show-title='false' w='98400' x='800' y='75000'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+      </zones>
+      <devicelayouts>
+        <devicelayout auto-generated='true' name='Phone'>
+          <size maxheight='700' minheight='700' sizing-mode='vscroll' />
+          <zones>
+            <zone h='100000' id='14' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98000' id='13' param='vert' type-v2='layout-flow' w='98400' x='800' y='1000'>
+                <zone fixed-size='280' h='75625' id='3' is-fixed='true' name='Actual Runs' w='82400' x='800' y='1000'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='11625' id='8' name='Actual Runs' pane-specification-id='3' param='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' type-v2='color' w='16000' x='83200' y='1000'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='171' h='22375' id='10' is-fixed='true' name='Sheet 2 (2)' show-title='false' w='98400' x='800' y='76625'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone count='1' h='14875' id='9' looped='1' name='Actual Runs' name1='Sheet 2 (2)' synchronized='1' type-v2='currpage' w='16000' x='83200' y='12625'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+              </zone>
+              <zone-style>
+                <format attr='border-color' value='#000000' />
+                <format attr='border-style' value='none' />
+                <format attr='border-width' value='0' />
+                <format attr='margin' value='8' />
+              </zone-style>
+            </zone>
+          </zones>
+        </devicelayout>
+      </devicelayouts>
+      <simple-id uuid='{1930AC08-1503-4F58-A8B1-303D07ADA254}' />
+    </dashboard>
+  </dashboards>
+  <windows saved-dpi-scale-factor='1.25' source-height='37'>
+    <window class='dashboard' name='Runs'>
+      <viewpoints>
+        <viewpoint name='Actual Runs'>
+          <current-page>
+            <multibucket>
+              <bucket>3</bucket>
+            </multibucket>
+          </current-page>
+          <zoom type='entire-view' />
+        </viewpoint>
+        <viewpoint name='Sheet 2 (2)'>
+          <current-page>
+            <multibucket>
+              <bucket>3</bucket>
+            </multibucket>
+          </current-page>
+          <zoom type='fit-width' />
+        </viewpoint>
+      </viewpoints>
+      <active id='9' />
+      <simple-id uuid='{C78E550F-7C7B-4697-BFD3-E32E16668582}' />
+    </window>
+    <window class='dashboard' maximized='true' name='Average'>
+      <viewpoints>
+        <viewpoint name='Averages'>
+          <current-page>
+            <multibucket>
+              <bucket>29</bucket>
+            </multibucket>
+          </current-page>
+          <zoom type='entire-view' />
+        </viewpoint>
+        <viewpoint name='Sheet 4 (2)'>
+          <zoom type='fit-width' />
+        </viewpoint>
+      </viewpoints>
+      <active id='-1' />
+      <simple-id uuid='{06324533-077D-48CD-8D2F-DE8ECD30770E}' />
+    </window>
+    <window class='worksheet' hidden='true' name='Actual Runs'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='3' param='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' type='color' />
+            <card type='currpage' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <current-page>
+          <multibucket>
+            <bucket>29</bucket>
+          </multibucket>
+        </current-page>
+      </viewpoint>
+      <simple-id uuid='{29C03FE5-4BA0-430A-853D-6080EAAEDA6A}' />
+    </window>
+    <window class='worksheet' hidden='true' name='Averages'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='3' param='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <current-page>
+          <multibucket>
+            <bucket>29</bucket>
+          </multibucket>
+        </current-page>
+      </viewpoint>
+      <simple-id uuid='{2D0A721F-725C-4517-9562-31EDF36F87B9}' />
+    </window>
+    <window class='worksheet' hidden='true' name='Sheet 2 (2)'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='2' param='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' type='color' />
+            <card type='currpage' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <current-page>
+          <multibucket>
+            <bucket>29</bucket>
+          </multibucket>
+        </current-page>
+      </viewpoint>
+      <simple-id uuid='{380479A7-0206-47D4-91CB-91BF22D8A081}' />
+    </window>
+    <window class='worksheet' hidden='true' name='Sheet 4 (2)'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+            <card type='measures' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.0y06r8i012k6fs1g6mrv90oe7af6].[none:Resource:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <zoom type='fit-width' />
+      </viewpoint>
+      <simple-id uuid='{242225E3-85B0-4EC7-B3A1-E1DA66A8D35D}' />
+    </window>
+  </windows>
+</workbook>
