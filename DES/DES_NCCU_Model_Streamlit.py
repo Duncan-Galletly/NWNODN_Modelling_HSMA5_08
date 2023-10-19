@@ -186,7 +186,7 @@ class Birth_Patient:
 # Class representing our model of Neonatal Unit.
 class NCCU_Model:
     
-    """1"""
+    #"""1"""
     def __init__(self, run_number):
         self.env = simpy.Environment()
         self.patient_counter = 0
@@ -199,7 +199,7 @@ class NCCU_Model:
 
         self.mean_q_time_cot = 0
 
-        """2"""
+        #"""2"""
         self.results_df = pd.DataFrame()
         self.results_df["P_ID"] = []
         self.results_df["Start_Q_Cot"] = []
@@ -291,7 +291,7 @@ class NCCU_Model:
         # Open a while so that any required cot can be processed while needed
         while birth.NICU_Pat or birth.HDCU_Pat or birth.SCBU_Pat:
 
-            """Process NICU Requirement"""
+            #"""Process NICU Requirement"""
             if birth.NICU_Pat == True:
                 # Request a NICU cot only
                 req = self.NICU.request()
@@ -313,7 +313,7 @@ class NCCU_Model:
             # Reinitialise the cot wait on exiting the previous Cot
             start_cot_wait = self.env.now
 
-            """Process HDU Requirement"""
+            #"""Process HDU Requirement"""
             
             
             if birth.HDCU_Pat:
@@ -354,7 +354,7 @@ class NCCU_Model:
             # Reinitialise the cot wait on exiting the previous Cot
             start_cot_wait = self.env.now
         
-            """Process SCBU Requirement"""
+            #"""Process SCBU Requirement"""
             if birth.SCBU_Pat:
                 
                 scbu_req = self.SCBU.request(priority=0)
@@ -404,14 +404,18 @@ class NCCU_Model:
             queue_length = len(resource.queue) # number of waiting
 
             # append data to the dataframe
-            self.resource_monitor_df = self.resource_monitor_df.append({"Run_Number": self.run_number,
-                                                                        "Day": day, 
-                                                                        "Resource": resource_name, 
-                                                                        "Daily_Use": usage,
-                                                                        "Total_Capacity": total_capacity,
-                                                                        "Available_Capacity": available_capacity,
-                                                                        "Queue_Length": queue_length},
-                                                                    ignore_index=True)
+            new_row = pd.DataFrame({
+                "Run_Number": [self.run_number],
+                "Day": [day],
+                "Resource": [resource_name],
+                "Daily_Use": [usage],
+                "Total_Capacity": [total_capacity],
+                "Available_Capacity": [available_capacity],
+                "Queue_Length": [queue_length]
+})
+
+            self.resource_monitor_df = pd.concat([self.resource_monitor_df, new_row], ignore_index=True)
+
         
     def monitor_resource(self, resource):
         while True:
