@@ -28,7 +28,7 @@ Select Solution,
         Site,
 		SolutionNumber,
 		CC_Level,
-		Count(*),
+		Count(*) Activity_Count,
 		Case when CC_Activity_Date between ''2018-04-01'' and ''2019-03-31''
 				then ''18/19''
 			 when CC_Activity_Date between ''2019-04-01'' and ''2020-03-31''
