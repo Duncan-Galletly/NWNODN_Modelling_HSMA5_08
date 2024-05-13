@@ -35,3 +35,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# tu run the script use the command --> streamlit run streamlit_app.py 
