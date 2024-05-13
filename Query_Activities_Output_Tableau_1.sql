@@ -96,3 +96,4 @@ Select Solution,
 
 PRINT @DynamicUnpivotQuery
 EXEC sp_executesql @DynamicUnpivotQuery
+
